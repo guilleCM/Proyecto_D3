@@ -4,3 +4,8 @@
     fill: white;
     text-anchor: middle;
 }
+.textoCirculos {
+	font-family: "arial";
+	font-size: 11px;
+	fill: red;
+}
