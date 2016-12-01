@@ -1,67 +1,63 @@
-var aciertos = [20.25, 65, 36.15, 54.87, 69.75, 34.10,
-                38.21, 48.75, 32.25, 56.15, 29.75, 44.62,
-                58.21, 34.10, 36.41, 45.50, 50];
+//los datos que nos interesa representar
+var dataset = [ 5, 10, 13, 19, 21, 25, 22, 18, 15, 13, 
+                11, 12, 15, 20, 18, 17, 16, 18, 23];
+//Esta lista con numeros decimales no funciona
+//con numeros mayores de 25 tampoco va bien
+//con numeros negativos tampoco
 
-// Objeto donde situaremos el elemento SVG: VIS
 
+//variable que contiene los elementos visuales
 var vis = {
-  height: 400,
-  width: 900,
-  widhtBarra: 40,
-  posicionXbarra: 50,
-  posicionYbarra: 4,
-  suspenso: 40,
-  aprobado: 50,
-  rectangulos: "null",
-
+    svgHeight: 100,
+    svgWidth: 500,
+    barPadding: 1,
+    numeroElementosDataset: dataset.length,
+    rectangulos: "null",
 }
 
-var svg = d3.select("body").append("svg")
-  .attr("height", vis.height)
-  .attr("width", vis.width);
+//Creando el SVG y proporcionandole un tamaño de ancho y de alto
+var svg = d3.select("body")
+            .append("svg")
+            .attr("width", vis.svgWidth)
+            .attr("height", vis.svgHeight);
 
+
+//Creando los rectangulos
 vis.rectangulos = svg.selectAll("rect")
-  .data(aciertos)
-  .enter()
-  .append("rect");
-
-vis.rectangulos.attr("x",
-    function(dato, i) {
-      return i * vis.posicionXbarra;
+    .data(dataset)
+    .enter()
+    .append("rect")
+//modificando los atributos de cada rectangulo q se va a crear
+vis.rectangulos.attr("x", function(d, i) {
+        return i * (vis.svgWidth / vis.numeroElementosDataset);
     })
-  .attr("y",
-    function(dato) {
-      return vis.height - dato * vis.posicionYbarra;
+    .attr("y", function(d) {
+        return vis.svgHeight - (d * 4);
     })
-  .attr("height", function(dato) {
-    return dato * vis.posicionYbarra + "px";
-  })
-  .attr("width", vis.widhtBarra)
-  .attr("fill", "hotpink");
-// <rect x="0" y="0" width="30" height="30" fill="purple"/>
+    .attr("width", vis.svgWidth / vis.numeroElementosDataset - vis.barPadding)
+    .attr("height", function(d) {
+        return d * 4;
+    })
+    .attr("fill", function(d) {
+        return "rgb(0, " + (d*10) + ", 0)";
+    })
 
+
+//Ahora creamos el texto
 var texto = svg.selectAll("text")
-  .data(aciertos)
-  .enter()
-  .append("text");
-
-texto.text(function(dato) {
-    return dato;
-  })
-  .attr("x", function(dato, i) {
-    return i * vis.posicionXbarra + vis.widhtBarra / 2;
-  })
-  .attr("y", function(dato) {
-    return vis.height - dato * vis.posicionYbarra + 20;
-  })
-  .attr("class", "etiquetas")
-  .attr("text-anchor", "middle")
-  .attr("fill", function(dato) {
-    if (dato < vis.suspenso) {
-      return "red";
-    } else if (dato < vis.aprobado) {
-      return "orange";
-    } else {
-      return "black";
-    }
-  });
+    .data(dataset)
+    .enter()
+    .append("text");
+//modificamos los atributos del texto q se va a crear
+texto.text(function(d) {
+        return d;
+    })
+    .attr("x", function(d, i) {
+        return i * (vis.svgWidth / vis.numeroElementosDataset) + (vis.svgWidth / vis.numeroElementosDataset - vis.barPadding) / 2;
+    })
+    .attr("y", function(d) {
+        return vis.svgHeight - (d * 4) + 15;
+    })
+//asignamos una clase al texto para poder editar esta clase en el css
+    .attr("class", "textoBarras")
+    

@@ -1,10 +1,6 @@
-.etiquetas {
-      /* Los elementos SVG tb pueden tener clases          
-      y el navagador los encuentra */
-      font-family: "sans-serif";
-      font-size:  11px;
-      /* fill: blueviolet; */
-      /* fill es una propiedad del elemento text          
-		(style) de SVG. No es CSS, pero aun asi,
-         metiendolo aqui chuta */
+.textoBarras {
+	font-family: "sans-serif";
+    font-size: 11px;
+    fill: white;
+    text-anchor: middle;
 }
