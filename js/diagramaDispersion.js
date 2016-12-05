@@ -1,3 +1,7 @@
+//apunto al CSS que me interesa para este ejercicio
+//sin tener que cambiarlo cada vez en el index.html
+document.getElementById('hojaCSS').href='css/test.css';
+
 //los datos que nos interesa representar
 var dataset = [
                   [ 5,     20 ],

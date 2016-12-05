@@ -1,3 +1,15 @@
+//apunto al CSS que me interesa para este ejercicio
+//sin tener que cambiarlo cada vez en el index.html
+document.getElementById('hojaCSS').href='css/test.css';
+
+//variable que contiene los elementos visuales
+var vis = {
+    svgHeight: 500,
+    svgWidth: 600,
+    circlePadding: 20,
+    circulos: "null",
+};
+
 //los datos que nos interesa representar
 var dataset = [
                   [ 5,     20 ],
@@ -9,29 +21,30 @@ var dataset = [
                   [ 475,   44 ],
                   [ 25,    67 ],
                   [ 85,    21 ],
-                  [ 220,   88 ]
+                  [ 220,   88 ],
+                  [ 600,   150]
               ];
-//Esta lista con numeros decimales no funciona
-//con numeros mayores de 25 tampoco va bien
-//con numeros negativos tampoco
 
+//ESCALAS
+d3.max(dataset, function(d) {    //Devuelve 480
+    return d[0];  //Referencia el primer valor del sub-arreglo
+});
+var xScale = d3.scale.linear()
+                     .domain([0, d3.max(dataset, function(d) { return d[0]; })])
+                     .range([vis.circlePadding, vis.svgWidth - vis.circlePadding * 2]);
 
-//variable que contiene los elementos visuales
-var vis = {
-    svgHeight: 100,
-    svgWidth: 500,
-    barPadding: 1,
-    circulos: "null",
-}
+var yScale = d3.scale.linear()
+                     .domain([0, d3.max(dataset, function(d) { return d[1]; })])
+                     .range([vis.svgHeight - vis.circlePadding, vis.circlePadding]);
+var rScale = d3.scale.linear()
+                     .domain([0, d3.max(dataset, function(d) { return d[1]; })])
+                     .range([2, 5]);
 
 //Creando el SVG y proporcionandole un tamaño de ancho y de alto
 var svg = d3.select("body")
             .append("svg")
             .attr("width", vis.svgWidth)
             .attr("height", vis.svgHeight);
-
-//Creando funciones para la Escala
-
 
 
 //Creando circulos
@@ -41,13 +54,13 @@ vis.circulos = svg.selectAll("circle")
     .append("circle")
 //modificando los atributos de cada circulo que va a ser creado
     .attr("cx", function(d) {
-        return d[0];
+        return xScale(d[0]); //llama a la funcion escala de x
     })
     .attr("cy", function(d) {
-        return d[1];
+        return yScale(d[1]); //llama a la funcion escala de y
     })
     .attr("r", function(d) {
-        return Math.sqrt (vis.svgHeight - d[1]);
+        return rScale(d[1]);
     }) /*Esta funcion determina el area del circulo
     haciendo más grandes los que estan más altos posicionados
     segun su Height(altura) */
@@ -72,14 +85,13 @@ texto.text(function(d) {
 }) /*El texto representara el valor 0 y el valor 1 
 dentro de la lista separado por una coma >>> 5,20 */
     .attr("x", function(d) {
-        return d[0];
+        return xScale(d[0]);
     })/*Modifica la posicion x del texto en funcion del
     primer valor de la lista del dato */
     .attr("y", function(d) {
-        return d[1];
+        return yScale(d[1]);
     })/*Modifica la posicion y del texto en funcion del
     segundo valor de la lista del dato */
 
 //asignamos una clase al texto para poder editar esta clase en el css
-    .attr("class", "textoCirculos")
-    
+    .attr("class", "textoCirculos");
