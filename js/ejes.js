@@ -38,7 +38,7 @@ var yScale = d3.scale.linear()
                      .range([vis.svgHeight - vis.circlePadding, vis.circlePadding]);
 var rScale = d3.scale.linear()
                      .domain([0, d3.max(dataset, function(d) { return d[1]; })])
-                     .range([2, 5]);
+                     .range([4, 10]);
 
 //EJES
 var xAxis = d3.svg.axis(); //creando un eje generico
@@ -82,14 +82,19 @@ vis.circulos = svg.selectAll("circle")
     haciendo más grandes los que estan más altos posicionados
     segun su Height(altura) */
 
-    .attr("fill", function(d) {
-        if (d[1]>50) {
-            return "green";
-        } else {
-            return "red";
-        }
-    }); /*testeando el color de los circulos en funcion de 
+    /*testeando el color de los circulos en funcion de 
     su height*/
+    .attr("fill", function(d) {
+        return "rgb(0, 0, " + (d[1]*2) + ")";
+    })
+    .attr("stroke", function(d) {
+      return "rgb(0, " + (d[1]*2) + ", 0)";
+    })
+    .attr("stroke-width", function(d) {
+        return ""+(d[1]/20)+"px";
+    });
+
+
 
 //Ahora creamos el texto
 var texto = svg.selectAll("text")
