@@ -1,11 +1,27 @@
+/*para el diagrama de barras*/
 .textoBarras {
 	font-family: "sans-serif";
     font-size: 11px;
     fill: white;
     text-anchor: middle;
 }
+
+/*Para el diagrama de dispersion*/
 .textoCirculos {
 	font-family: "arial";
 	font-size: 11px;
 	fill: red;
+}
+
+/*para el ejercicio de ejes*/
+.axis path,
+.axis line {
+    fill: none;
+    stroke: black;
+    shape-rendering: crispEdges;
+}
+
+.axis text {
+    font-family: sans-serif;
+    font-size: 11px;
 }
