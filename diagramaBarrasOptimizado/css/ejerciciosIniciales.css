@@ -1,0 +1,17 @@
+div.bar {
+	display: inline-block;
+	width: 20px;
+	height: 75px;
+	background-color: teal;
+	margin-right: 2px;
+}
+svg.circulo {
+	fill: yellow;
+	fill-opacity: 0.5;
+	stroke: orange;
+	stroke-width: 5px;
+}
+svg,text {
+	font-family: arial;
+	font-size: 100%;
+}

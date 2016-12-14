@@ -1,0 +1,43 @@
+/*para el diagrama de barras*/
+.textoBarras {
+	font-family: "sans-serif";
+    font-size: 11px;
+    fill: white;
+    text-anchor: middle;
+}
+
+/*Para el diagrama de dispersion*/
+.textoCirculos {
+	font-family: "arial";
+	font-size: 11px;
+	fill: black;
+}
+
+/*para el ejercicio de ejes*/
+.axis path,
+.axis line {
+    fill: none;
+    stroke: black;
+    shape-rendering: crispEdges;
+}
+
+.axis text {
+    font-family: sans-serif;
+    font-size: 11px;
+}
+
+/*eventos*/
+#añadirValor {
+    background-color: #90EE90;
+    border-color: #90EE90; 
+    padding: 5px;
+    width: 420px;
+    border-style: outset;
+}
+#eliminarValor {
+    background-color: #FFA07A;
+    border-style: outset;
+    border-color: #FFA07A;
+    padding: 5px;
+    width: 420px;
+}
