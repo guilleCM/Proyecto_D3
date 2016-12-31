@@ -4,56 +4,72 @@ var dataset=[
     "presupuesto":115,
     "recaudado":1030,
     "nota":6.2,
-    "lanzamiento":1999},
+    "lanzamiento":1999,
+    "poster": "https://raw.githubusercontent.com/guilleCM/Proyecto_D3/master/StarWars_dispersionConEventos/img/1.jpg"
+  },
 
   {"titulo":"Episodio II: El ataque de los clones",
    "cronologia": 2,
    "presupuesto":115,
    "recaudado":649,
    "nota":6.3,
-   "lanzamiento":2002},
+   "lanzamiento":2002,
+   "poster": "https://raw.githubusercontent.com/guilleCM/Proyecto_D3/master/StarWars_dispersionConEventos/img/2.jpg"
+ },
 
   {"titulo":"Episodio III: La venganza de los Sith",
    "cronologia": 3,
    "presupuesto":113,
    "recaudado":848,
    "nota":7.1,
-   "lanzamiento":2005},
+   "lanzamiento":2005,
+   "poster": "https://raw.githubusercontent.com/guilleCM/Proyecto_D3/master/StarWars_dispersionConEventos/img/3.jpg"
+ },
 
   {"titulo":"Rogue One: Una historia de Star Wars",
    "cronologia": 4,
    "presupuesto":200,
    "recaudado":600,
    "nota":7.1,
-   "lanzamiento":2016},
+   "lanzamiento":2016,
+   "poster": "https://raw.githubusercontent.com/guilleCM/Proyecto_D3/master/StarWars_dispersionConEventos/img/4.jpg"
+ },
 
   {"titulo":"Episodio IV: Una nueva esperanza",
    "cronologia": 5,
    "presupuesto":11,
    "recaudado":775.4,
    "nota":7.9,
-   "lanzamiento":1977},
+   "lanzamiento":1977,
+   "poster": "https://raw.githubusercontent.com/guilleCM/Proyecto_D3/master/StarWars_dispersionConEventos/img/5.jpg"
+ },
 
   {"titulo":"Episodio V: El imperio contraataca",
    "cronologia": 6,
    "presupuesto":18,
    "recaudado":538.4,
    "nota":8.1,
-   "lanzamiento":1980},
+   "lanzamiento":1980,
+   "poster": "https://raw.githubusercontent.com/guilleCM/Proyecto_D3/master/StarWars_dispersionConEventos/img/6.jpg"
+ },
 
   {"titulo":"Episodio VI: El retorno del Jedi",
    "cronologia": 7,
    "presupuesto":32.5,
    "recaudado":475.1,
    "nota":7.9,
-   "lanzamiento":1983},
+   "lanzamiento":1983,
+   "poster": "https://raw.githubusercontent.com/guilleCM/Proyecto_D3/master/StarWars_dispersionConEventos/img/7.jpg"
+ },
 
   {"titulo":"Episodio VII: El despertar de la fuerza",
    "cronologia": 8,
    "presupuesto":200,
    "recaudado":2200,
    "nota":7,
-   "lanzamiento":2015},
+   "lanzamiento":2015,
+   "poster": "https://raw.githubusercontent.com/guilleCM/Proyecto_D3/master/StarWars_dispersionConEventos/img/8.jpg"
+ },
 ];
 
 //funciones
@@ -158,7 +174,7 @@ svg.selectAll("circle")
            })
       //mostrar el div poster
       d3.select("#poster")
-        .style("background-image", "url(img/"+d.cronologia+".jpg)")
+        .style("background-image", "url("+d.poster+")")
         .style("display", "inline-block")
 
       //mostrar tooltip  

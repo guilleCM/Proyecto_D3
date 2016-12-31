@@ -80,7 +80,7 @@
 #presupuesto {color: #009688;}
 #recaudado {color: #283593;}
 body {
-  background-image: url(../img/background2.jpg);
+  background-image: url(http://wallpapercave.com/wp/X0DFbDH.jpg);
   font-family: sans-serif;
 }
 
@@ -95,7 +95,7 @@ body {
     shape-rendering: crispEdges;
 }
 svg {
-  background-image: url(../img/wallpaper.jpg);
+  background-image: url(https://raw.githubusercontent.com/guilleCM/Proyecto_D3/master/StarWars_dispersionConEventos/img/wallpaper.jpg);
   background-size: cover;
 }
 .axis text {
