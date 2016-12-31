@@ -1,0 +1,256 @@
+<!DOCTYPE html>
+<html><head>
+<meta http-equiv="content-type" content="text/html; charset=UTF-8"><meta charset="utf-8">
+<meta name="viewport" content="width=1000">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:site" content="@mbostock">
+<meta property="og:url" content="http://bl.ocks.org/mbostock/3886208">
+<meta property="og:title" content="Stacked Bar Chart">
+<meta property="og:description" content="Mike Bostock’s Block 3886208">
+<meta property="og:image" content="http://bl.ocks.org/mbostock/raw/3886208/b2fa9b5cd0eb7ce94016d74b56e9d6b65f113a6a/thumbnail.png">
+<title>Stacked Bar Chart - bl.ocks.org</title>
+<link rel="icon" href="http://bl.ocks.org/favicon.png">
+<style>
+
+@import url("/style.css");
+
+</style>
+
+</head><body><header>
+  <div class="column">
+    <div class="navigation">
+      <a href="http://bl.ocks.org/">Popular</a>
+      / <a href="http://bl.ocks.org/-/about">About</a>
+    </div>
+    <a class="user" href="http://bl.ocks.org/mbostock"><img class="avatar" src="Stacked%20Bar%20Chart%20-%20bl.ocks.org_files/230541.jpeg" width="30" height="30">Mike Bostock</a>’s
+    Block <a class="gist gist-id self" title="View Gist on GitHub." href="https://gist.github.com/mbostock/3886208">3886208</a>
+    ← <a class="gist-id" href="http://bl.ocks.org/mbostock/3885304">3885304</a>    <div class="date">Updated December 24, 2016</div>
+  </div>
+</header>
+
+<div class="column">
+  <h1>Stacked Bar Chart</h1>
+  <div class="index">
+    <iframe sandbox="allow-popups allow-scripts allow-forms allow-same-origin" src="Stacked%20Bar%20Chart%20-%20bl.ocks.org_files/a.html" marginwidth="0" marginheight="0" style="height:500px;" scrolling="no"></iframe>
+  </div>
+  <div class="index-pop">
+    <a target="_blank" title="Open Block 3886208 a new window." href="http://bl.ocks.org/mbostock/raw/3886208">Open<svg height="16" width="12"><path d="M11 10h1v3c0 0.55-0.45 1-1 1H1c-0.55 0-1-0.45-1-1V3c0-0.55 0.45-1 1-1h3v1H1v10h10V10zM6 2l2.25 2.25-3.25 3.25 1.5 1.5 3.25-3.25 2.25 2.25V2H6z"></path></svg></a>
+  </div>
+  <div class="gist-readme" data-key="README.md"><p>This stacked bar 
+chart is constructed from a CSV file storing the populations of 
+different states by age group. The chart employs <a href="http://bl.ocks.org/mbostock/3019563">conventional margins</a> and a number of D3 features:</p>
+
+<ul>
+<li><a href="https://github.com/d3/d3-dsv">d3-dsv</a> - load and parse data</li>
+<li><a href="https://github.com/d3/d3-scale">d3-scale</a> - <em>x</em>- and <em>y</em>-position, and color encoding</li>
+<li><a href="https://github.com/d3/d3-format">d3-format</a> - SI prefix formatting (e.g., “10M” for 10,000,000)</li>
+<li><a href="https://github.com/d3/d3-array">d3-array</a> - compute simple statistics (e.g., max)</li>
+<li><a href="https://github.com/d3/d3-axis">d3-axis</a> - display axes</li>
+<li><a href="https://github.com/d3/d3-shape">d3-shape</a> - computed stacked positions</li>
+</ul></div>
+  <div class="gist-sources">
+    <div class="gist-source" data-key="index.html">
+      <h2>index.html<a name="index.html" class="anchor" href="#index.html">#</a></h2>
+      <pre><code class="html xml"><span class="doctype">&lt;!DOCTYPE html&gt;</span>
+<span class="tag">&lt;<span class="title">style</span>&gt;</span><span class="css">
+
+<span class="class">.axis</span> <span class="class">.domain</span> <span class="rules">{
+  <span class="rule"><span class="attribute">display</span>:<span class="value"> none</span>;</span>
+<span class="rule">}</span></span>
+
+</span><span class="tag">&lt;/<span class="title">style</span>&gt;</span>
+<span class="tag">&lt;<span class="title">svg</span> <span class="attribute">width</span>=<span class="value">"960"</span> <span class="attribute">height</span>=<span class="value">"500"</span>&gt;</span><span class="tag">&lt;/<span class="title">svg</span>&gt;</span>
+<span class="tag">&lt;<span class="title">script</span> <span class="attribute">src</span>=<span class="value">"https://d3js.org/d3.v4.min.js"</span>&gt;</span><span class="javascript"></span><span class="tag">&lt;/<span class="title">script</span>&gt;</span>
+<span class="tag">&lt;<span class="title">script</span>&gt;</span><span class="javascript">
+
+<span class="keyword">var</span> svg = d3.select(<span class="string">"svg"</span>),
+    margin = {top: <span class="number">20</span>, right: <span class="number">20</span>, bottom: <span class="number">30</span>, left: <span class="number">40</span>},
+    width = +svg.attr(<span class="string">"width"</span>) - margin.left - margin.right,
+    height = +svg.attr(<span class="string">"height"</span>) - margin.top - margin.bottom,
+    g = svg.append(<span class="string">"g"</span>).attr(<span class="string">"transform"</span>, <span class="string">"translate("</span> + margin.left + <span class="string">","</span> + margin.top + <span class="string">")"</span>);
+
+<span class="keyword">var</span> x = d3.scaleBand()
+    .rangeRound([<span class="number">0</span>, width])
+    .paddingInner(<span class="number">0.05</span>)
+    .align(<span class="number">0.1</span>);
+
+<span class="keyword">var</span> y = d3.scaleLinear()
+    .rangeRound([height, <span class="number">0</span>]);
+
+<span class="keyword">var</span> z = d3.scaleOrdinal()
+    .range([<span class="string">"#98abc5"</span>, <span class="string">"#8a89a6"</span>, <span class="string">"#7b6888"</span>, <span class="string">"#6b486b"</span>, <span class="string">"#a05d56"</span>, <span class="string">"#d0743c"</span>, <span class="string">"#ff8c00"</span>]);
+
+d3.csv(<span class="string">"data.csv"</span>, <span class="function"><span class="keyword">function</span><span class="params">(d, i, columns)</span> {</span>
+  <span class="keyword">for</span> (i = <span class="number">1</span>, t = <span class="number">0</span>; i &lt; columns.length; ++i) t += d[columns[i]] = +d[columns[i]];
+  d.total = t;
+  <span class="keyword">return</span> d;
+}, <span class="function"><span class="keyword">function</span><span class="params">(error, data)</span> {</span>
+  <span class="keyword">if</span> (error) <span class="keyword">throw</span> error;
+
+  <span class="keyword">var</span> keys = data.columns.slice(<span class="number">1</span>);
+
+  data.sort(<span class="function"><span class="keyword">function</span><span class="params">(a, b)</span> {</span> <span class="keyword">return</span> b.total - a.total; });
+  x.domain(data.map(<span class="function"><span class="keyword">function</span><span class="params">(d)</span> {</span> <span class="keyword">return</span> d.State; }));
+  y.domain([<span class="number">0</span>, d3.max(data, <span class="function"><span class="keyword">function</span><span class="params">(d)</span> {</span> <span class="keyword">return</span> d.total; })]).nice();
+  z.domain(keys);
+
+  g.append(<span class="string">"g"</span>)
+    .selectAll(<span class="string">"g"</span>)
+    .data(d3.stack().keys(keys)(data))
+    .enter().append(<span class="string">"g"</span>)
+      .attr(<span class="string">"fill"</span>, <span class="function"><span class="keyword">function</span><span class="params">(d)</span> {</span> <span class="keyword">return</span> z(d.key); })
+    .selectAll(<span class="string">"rect"</span>)
+    .data(<span class="function"><span class="keyword">function</span><span class="params">(d)</span> {</span> <span class="keyword">return</span> d; })
+    .enter().append(<span class="string">"rect"</span>)
+      .attr(<span class="string">"x"</span>, <span class="function"><span class="keyword">function</span><span class="params">(d)</span> {</span> <span class="keyword">return</span> x(d.data.State); })
+      .attr(<span class="string">"y"</span>, <span class="function"><span class="keyword">function</span><span class="params">(d)</span> {</span> <span class="keyword">return</span> y(d[<span class="number">1</span>]); })
+      .attr(<span class="string">"height"</span>, <span class="function"><span class="keyword">function</span><span class="params">(d)</span> {</span> <span class="keyword">return</span> y(d[<span class="number">0</span>]) - y(d[<span class="number">1</span>]); })
+      .attr(<span class="string">"width"</span>, x.bandwidth());
+
+  g.append(<span class="string">"g"</span>)
+      .attr(<span class="string">"class"</span>, <span class="string">"axis"</span>)
+      .attr(<span class="string">"transform"</span>, <span class="string">"translate(0,"</span> + height + <span class="string">")"</span>)
+      .call(d3.axisBottom(x));
+
+  g.append(<span class="string">"g"</span>)
+      .attr(<span class="string">"class"</span>, <span class="string">"axis"</span>)
+      .call(d3.axisLeft(y).ticks(<span class="literal">null</span>, <span class="string">"s"</span>))
+    .append(<span class="string">"text"</span>)
+      .attr(<span class="string">"x"</span>, <span class="number">2</span>)
+      .attr(<span class="string">"y"</span>, y(y.ticks().pop()) + <span class="number">0.5</span>)
+      .attr(<span class="string">"dy"</span>, <span class="string">"0.32em"</span>)
+      .attr(<span class="string">"fill"</span>, <span class="string">"#000"</span>)
+      .attr(<span class="string">"font-weight"</span>, <span class="string">"bold"</span>)
+      .attr(<span class="string">"text-anchor"</span>, <span class="string">"start"</span>)
+      .text(<span class="string">"Population"</span>);
+
+  <span class="keyword">var</span> legend = g.append(<span class="string">"g"</span>)
+      .attr(<span class="string">"font-family"</span>, <span class="string">"sans-serif"</span>)
+      .attr(<span class="string">"font-size"</span>, <span class="number">10</span>)
+      .attr(<span class="string">"text-anchor"</span>, <span class="string">"end"</span>)
+    .selectAll(<span class="string">"g"</span>)
+    .data(keys.slice().reverse())
+    .enter().append(<span class="string">"g"</span>)
+      .attr(<span class="string">"transform"</span>, <span class="function"><span class="keyword">function</span><span class="params">(d, i)</span> {</span> <span class="keyword">return</span> <span class="string">"translate(0,"</span> + i * <span class="number">20</span> + <span class="string">")"</span>; });
+
+  legend.append(<span class="string">"rect"</span>)
+      .attr(<span class="string">"x"</span>, width - <span class="number">19</span>)
+      .attr(<span class="string">"width"</span>, <span class="number">19</span>)
+      .attr(<span class="string">"height"</span>, <span class="number">19</span>)
+      .attr(<span class="string">"fill"</span>, z);
+
+  legend.append(<span class="string">"text"</span>)
+      .attr(<span class="string">"x"</span>, width - <span class="number">24</span>)
+      .attr(<span class="string">"y"</span>, <span class="number">9.5</span>)
+      .attr(<span class="string">"dy"</span>, <span class="string">"0.32em"</span>)
+      .text(<span class="function"><span class="keyword">function</span><span class="params">(d)</span> {</span> <span class="keyword">return</span> d; });
+});
+
+</span><span class="tag">&lt;/<span class="title">script</span>&gt;</span>
+</code></pre>
+    </div>
+    <div class="gist-source" data-key="data.csv">
+      <h2>data.csv<a name="data.csv" class="anchor" href="#data.csv">#</a></h2>
+      <pre><code class="csv undefined">State,Under 5 Years,5 to 13 Years,14 to 17 Years,18 to 24 Years,25 to 44 Years,45 to 64 Years,65 Years and Over
+AL,310504,552339,259034,450818,1231572,1215966,641667
+AK,52083,85640,42153,74257,198724,183159,50277
+AZ,515910,828669,362642,601943,1804762,1523681,862573
+AR,202070,343207,157204,264160,754420,727124,407205
+CA,2704659,4499890,2159981,3853788,10604510,8819342,4114496
+CO,358280,587154,261701,466194,1464939,1290094,511094
+CT,211637,403658,196918,325110,916955,968967,478007
+DE,59319,99496,47414,84464,230183,230528,121688
+DC,36352,50439,25225,75569,193557,140043,70648
+FL,1140516,1938695,925060,1607297,4782119,4746856,3187797
+GA,740521,1250460,557860,919876,2846985,2389018,981024
+HI,87207,134025,64011,124834,356237,331817,190067
+ID,121746,201192,89702,147606,406247,375173,182150
+IL,894368,1558919,725973,1311479,3596343,3239173,1575308
+IN,443089,780199,361393,605863,1724528,1647881,813839
+IA,201321,345409,165883,306398,750505,788485,444554
+KS,202529,342134,155822,293114,728166,713663,366706
+KY,284601,493536,229927,381394,1179637,1134283,565867
+LA,310716,542341,254916,471275,1162463,1128771,540314
+ME,71459,133656,69752,112682,331809,397911,199187
+MD,371787,651923,316873,543470,1556225,1513754,679565
+MA,383568,701752,341713,665879,1782449,1751508,871098
+MI,625526,1179503,585169,974480,2628322,2706100,1304322
+MN,358471,606802,289371,507289,1416063,1391878,650519
+MS,220813,371502,174405,305964,764203,730133,371598
+MO,399450,690476,331543,560463,1569626,1554812,805235
+MT,61114,106088,53156,95232,236297,278241,137312
+NE,132092,215265,99638,186657,457177,451756,240847
+NV,199175,325650,142976,212379,769913,653357,296717
+NH,75297,144235,73826,119114,345109,388250,169978
+NJ,557421,1011656,478505,769321,2379649,2335168,1150941
+NM,148323,241326,112801,203097,517154,501604,260051
+NY,1208495,2141490,1058031,1999120,5355235,5120254,2607672
+NC,652823,1097890,492964,883397,2575603,2380685,1139052
+ND,41896,67358,33794,82629,154913,166615,94276
+OH,743750,1340492,646135,1081734,3019147,3083815,1570837
+OK,266547,438926,200562,369916,957085,918688,490637
+OR,243483,424167,199925,338162,1044056,1036269,503998
+PA,737462,1345341,679201,1203944,3157759,3414001,1910571
+RI,60934,111408,56198,114502,277779,282321,147646
+SC,303024,517803,245400,438147,1193112,1186019,596295
+SD,58566,94438,45305,82869,196738,210178,116100
+TN,416334,725948,336312,550612,1719433,1646623,819626
+TX,2027307,3277946,1420518,2454721,7017731,5656528,2472223
+UT,268916,413034,167685,329585,772024,538978,246202
+VT,32635,62538,33757,61679,155419,188593,86649
+VA,522672,887525,413004,768475,2203286,2033550,940577
+WA,433119,750274,357782,610378,1850983,1762811,783877
+WV,105435,189649,91074,157989,470749,514505,285067
+WI,362277,640286,311849,553914,1487457,1522038,750146
+WY,38253,60890,29314,53980,137338,147279,65614</code></pre>
+    </div>
+  </div>
+  <div class="gist-license">
+    <h2>LICENSE<a name="license" class="anchor" href="#license">#</a></h2>
+    Released under the <a target="_blank" href="https://opensource.org/licenses/GPL-3.0">GNU General Public License, version 3</a>.
+  </div>
+</div>
+
+<script src="Stacked%20Bar%20Chart%20-%20bl.ocks.org_files/d3.js"></script>
+<script src="Stacked%20Bar%20Chart%20-%20bl.ocks.org_files/highlight.js"></script>
+<script>
+
+var gist = {"public":true,"sha":"b2fa9b5cd0eb7ce94016d74b56e9d6b65f113a6a","files":{".block":{"language":null,"type":"text/plain","filename":".block","size":17,"sha":"703d310b399098a243a76a50bc209167e924cfd2"},"README.md":{"language":"Markdown","type":"text/plain","filename":"README.md","size":674,"sha":"44cd8857ba21e6f43719727ad06186d126a35238"},"data.csv":{"language":"CSV","type":"text/csv","filename":"data.csv","size":2806,"sha":"4911c2680e4ae38f6a12d421fee978b675204dab"},"index.html":{"language":"HTML","type":"text/html","filename":"index.html","size":2692,"sha":"4a09d5215465752e80d088e0644975b82fbe6652"},"thumbnail.png":{"language":null,"type":"image/png","filename":"thumbnail.png","size":12689,"sha":"8351d31413b5c4358e7608630ad72e2ce9892995"}},"created_at":"2012-10-13T21:33:41Z","updated_at":"2016-12-24T17:25:13Z","description":"Stacked Bar Chart","owner":{"login":"mbostock"},"fork_of":{"id":"3885304","owner":{"login":"mbostock"}},"id":"3886208"};
+
+var files = d3.values(gist.files);
+
+d3.select(".gist-readme")
+    .data(files, function(d) { return d ? d.filename : this.getAttribute("data-key"); })
+    .each(function(d) {
+      var readme = d3.select(this);
+      d3.text("/mbostock/raw/3886208/b2fa9b5cd0eb7ce94016d74b56e9d6b65f113a6a/" + d.filename, function(error, content) {
+        if (error) content = "Sorry, an error occurred.";
+        readme.html(new Showdown.converter().makeHtml(content));
+        readme.selectAll("code").each(function() { hljs.highlightBlock(this); });
+      });
+    });
+
+d3.selectAll(".gist-source")
+    .data(files, function(d) { return d ? d.filename : this.getAttribute("data-key"); })
+  .select("code")
+    .attr("class", function(d) { return d.language && (d.language === "JSON" ? "javascript" : d.language.toLowerCase()); })
+    .each(function(d) {
+      var code = d3.select(this);
+      d3.text("/mbostock/raw/3886208/b2fa9b5cd0eb7ce94016d74b56e9d6b65f113a6a/" + (d.filename === "index.html" ? "" : d.filename), function(error, content) {
+        if (error) content = "Sorry, an error occurred.";
+        code.text(content);
+        hljs.highlightBlock(code.node());
+      });
+    });
+
+</script>
+
+<script>
+
+GoogleAnalyticsObject = "ga", ga = function() { ga.q.push(arguments); }, ga.q = [], ga.l = +new Date;
+ga("create", "UA-48272912-1", "auto");
+ga("send", "pageview");
+
+</script>
+<script async="" src="Stacked%20Bar%20Chart%20-%20bl.ocks.org_files/analytics.js"></script>
+</body></html>
