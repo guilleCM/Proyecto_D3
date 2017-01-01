@@ -40,6 +40,19 @@
   border-color: #311b92;
   background: #311b92;
 }
+#banner {
+  position: absolute;
+  left: 810px;
+  top: 8px;
+  height: 400px;
+  width: 230px;
+  background-image: none;
+  background-size: cover;
+  padding: 20px;
+}
+
+
+
 #poster {
   position: absolute;
   left: 830px;
@@ -50,7 +63,6 @@
   background-image: none;
   background-size: cover;
 }
-
 #tooltip {
         position: absolute;
         width: 120px;
