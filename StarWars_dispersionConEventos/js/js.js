@@ -72,11 +72,11 @@ var dataset=[
  },
 ];
 
-//funciones
+//variables sobre los datos
 var minimoPresupuesto = d3.min(dataset, function(d) {return d.presupuesto });
 var maximoPresupuesto = d3.max(dataset, function(d) {return d.presupuesto });
 
-var añoMaximo = d3.max(dataset, function (d) {return d.lanzamiento});
+var fechaUltimoLanzamiento = d3.max(dataset, function (d) {return d.lanzamiento});
 
 var maximoRecaudado = d3.max(dataset, function(d) {return d.recaudado; });
 var minimoRecaudado = d3.min(dataset, function(d) {return d.recaudado; });
@@ -85,8 +85,7 @@ var dineroTotal=maximoPresupuesto+maximoRecaudado;
 
 var totalPeliculas = dataset.length;
 
-var posicionTooltip= "d.cronologia" ;
-
+  
 //variable que contiene los elementos visuales
 var vis = {
     svgHeight: 400,
@@ -118,8 +117,6 @@ var yAxis = d3.svg.axis()
                   .scale(yScale)
                   .orient("left")
                   .ticks(10);
-
-
 
 //Creando el SVG y proporcionandole un tamaño de ancho y de alto
 var svg = d3.select("body")
@@ -162,6 +159,7 @@ svg.selectAll("circle")
     .attr("stroke-width", function(d) {
         return d.presupuesto/dineroTotal*40;
     })
+    //evento al pasar el raton por encima de los datos
     .on("mouseover", function(d) {
 
       d3.select(this)
@@ -199,6 +197,7 @@ svg.selectAll("circle")
         .text(d.recaudado)
         })
 
+    //evento para deshacer el efecto mouseover
     .on("mouseout", function(d) {
 
       d3.select(this)
@@ -216,10 +215,11 @@ svg.selectAll("circle")
 
     })
 
+//Evento al clickar sobre el boton Ordenar por fecha de estreno
 d3.select("#ordenLanzamientoValores")
   .on("click", function(){
       xScale = d3.scale.linear()
-                       .domain([1970, añoMaximo])
+                       .domain([1970, fechaUltimoLanzamiento])
                        .range([vis.circlePadding, vis.svgWidth - vis.circlePadding * 2]);
 
       xAxis = d3.svg.axis() //creando un eje generico
@@ -253,6 +253,7 @@ d3.select("#ordenLanzamientoValores")
             })
   })
 
+//evento al clickar sobre el boton ordenar segun la cronologia
 d3.select("#ordenCronologicoValores")
   .on("click", function(){
 
