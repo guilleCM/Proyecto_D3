@@ -142,7 +142,8 @@ svg.append("g")
 
 //Creando circulos
 svg.selectAll("circle")
-    .data(dataset)
+    .data(dataset
+      .sort(function(a,b){return a.cronologia-b.cronologia;}))
     .enter()
     .append("circle")
 //modificando los atributos de cada circulo que va a ser creado
@@ -232,10 +233,23 @@ d3.select("#ordenLanzamientoValores")
             .call(xAxis);
 
       svg.selectAll("circle")
+            .data(dataset
+            .sort(function(a,b){return a.lanzamiento-b.lanzamiento;}))
             .transition()
             .duration(1500)
             .attr("cx", function(d) {
               return xScale(d.lanzamiento); //llama a la funcion escala de x
+            })
+            .attr("cy", function(d) {
+              return yScale(d.nota); //llama a la funcion escala de y
+            })
+            .attr("r", function(d) {
+                return d.recaudado/dineroTotal*40;
+            }) 
+            .attr("fill", "#283593")
+            .attr("stroke", "#009688")
+            .attr("stroke-width", function(d) {
+                return d.presupuesto/dineroTotal*40;
             })
   })
 
