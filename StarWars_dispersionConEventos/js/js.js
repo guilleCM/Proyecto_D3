@@ -90,7 +90,7 @@ var totalPeliculas = dataset.length;
 var vis = {
     svgHeight: 400,
     svgWidth: 800,
-    circlePadding: 30,
+    circlePadding: 40,
 };
 
 //ESCALAS
@@ -215,6 +215,19 @@ svg.selectAll("circle")
 
     })
 
+svg.append("text")
+    .attr("text-anchor", "middle")  // this makes it easy to centre the text as the transform is applied to the anchor
+    .attr("transform", "translate("+ (vis.circlePadding/2.5) +","+(vis.svgHeight/2)+")rotate(-90)")  // text is drawn off the screen top left, move down and out and rotate
+    .text("Nota media")
+    .attr("fill", "white");
+
+svg.append("text")
+    .attr("class", "textoEjeX")
+    .attr("text-anchor", "middle")  // this makes it easy to centre the text as the transform is applied to the anchor
+    .attr("transform", "translate("+ (vis.svgWidth/2) +","+(vis.svgHeight-(vis.circlePadding/5))+")")  // centre below axis
+    .text("Episodios")
+    .attr("fill", "white");
+
 //Evento al clickar sobre el boton Ordenar por fecha de estreno
 d3.select("#ordenLanzamientoValores")
   .on("click", function(){
@@ -229,8 +242,11 @@ d3.select("#ordenLanzamientoValores")
 
       svg.select(".axis")
             .transition()
-            .duration(1000)
+            .duration(2000)
             .call(xAxis);
+
+      svg.select(".textoEjeX")
+            .text("Año");
 
       svg.selectAll("circle")
             .data(dataset
@@ -265,6 +281,9 @@ d3.select("#ordenCronologicoValores")
                     .scale(xScale) //le decimos en que escala va a operar el eje
                     .ticks(dataset.length) //establece el numero de cortes del eje
                     .orient("bottom"); 
+
+      svg.select(".textoEjeX")
+      .text("Episodios");
 
       svg.select(".axis")
             .transition()
