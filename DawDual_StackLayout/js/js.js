@@ -5,8 +5,8 @@ var margin = {top: 80, right: 80, bottom: 80, left: 80},
 var x = d3.scale.ordinal()
     .rangeRoundBands([0, width], .1);
 
-var y0 = d3.scale.linear().domain([0, 30]).range([height, 0]),
-    y1 = d3.scale.linear().domain([0, 30]).range([height, 0]);
+var y0 = d3.scale.linear().range([height, 0]),
+    y1 = d3.scale.linear().range([height, 0]);
 
 var xAxis = d3.svg.axis()
     .scale(x)
@@ -17,7 +17,7 @@ var yAxisLeft = d3.svg.axis().scale(y0).ticks(6).orient("left");
 // create right yAxis
 var yAxisRight = d3.svg.axis().scale(y1).ticks(6).orient("right");
 
-var svg = d3.select("body").append("svg")
+var svg = d3.select("#elementoSVG").append("svg")
     .attr("width", width + margin.left + margin.right)
     .attr("height", height + margin.top + margin.bottom)
   .append("g")
@@ -63,16 +63,39 @@ d3.csv("data.csv", type, function(error, data) {
       .attr("x", function(d) { return x(d.curso); })
       .attr("width", x.rangeBand()/2)
       .attr("y", function(d) { return y0(d.alumnosEmpiezan); })
-    .attr("height", function(d,i,j) { return height - y0(d.alumnosEmpiezan); }); 
-
+    .attr("height", function(d,i,j) { return height - y0(d.alumnosEmpiezan); })
+          .on("mouseover", function(d) {
+       d3.select("this")
+      .attr("fill", "red")
+      })
   bars.append("rect")
       .attr("class", "bar2")
       .attr("x", function(d) { return x(d.curso) + x.rangeBand()/2; })
       .attr("width", x.rangeBand() / 2)
       .attr("y", function(d) { return y1(d.alumnosPromocionan); })
-    .attr("height", function(d,i,j) { return height - y1(d.alumnosPromocionan); }); 
+    .attr("height", function(d,i,j) { return height - y1(d.alumnosPromocionan); })
+
+      .on("mouseover", function(d) {
+       d3.select("this")
+      .attr("fill", "red")
+      })
+
+  text = svg.selectAll(".graph").data(data).enter();
+  text.append("text")
+      .attr("class", "textBar1")
+      .text(function(d) { return d.alumnosEmpiezan; })
+      .attr("x", function(d) { return x(d.curso) + (x.rangeBand()/5);})
+      .attr("y", function(d) { return y0(d.alumnosEmpiezan-1.5); } )
+
+  text.append("text")
+      .attr("class", "textBar2")
+      .text(function(d) { return d.alumnosPromocionan; })
+      .attr("x", function(d) { return x(d.curso) + (x.rangeBand()/1.5) ;})
+      .attr("y", function(d) { return y0(d.alumnosPromocionan-1.5); } )
 
 });
+
+
 
 function type(d) {
   d.alumnosEmpiezan = +d.alumnosEmpiezan;
