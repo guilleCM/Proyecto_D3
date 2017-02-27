@@ -1,82 +1,80 @@
-var svg = d3.select("svg"),
-    margin = {top: 20, right: 20, bottom: 30, left: 40},
-    width = +svg.attr("width") - margin.left - margin.right,
-    height = +svg.attr("height") - margin.top - margin.bottom,
-    g = svg.append("g").attr("transform", "translate(" + margin.left + "," + margin.top + ")");
+var margin = {top: 80, right: 80, bottom: 80, left: 80},
+    width = 800 - margin.left - margin.right,
+    height = 400 - margin.top - margin.bottom;
 
-var x = d3.scaleBand()
-    .rangeRound([0, width])
-    .paddingInner(0.10)
-    .align(0.1);
+var x = d3.scale.ordinal()
+    .rangeRoundBands([0, width], .1);
 
-var y = d3.scaleLinear()
-    .rangeRound([height, 0]);
+var y0 = d3.scale.linear().domain([0, 30]).range([height, 0]),
+    y1 = d3.scale.linear().domain([0, 30]).range([height, 0]);
 
-var colores = d3.scaleOrdinal()
-    .range(["#98abc5", "#8a89a6"]);
+var xAxis = d3.svg.axis()
+    .scale(x)
+    .orient("bottom");
 
-d3.csv("data.csv", function(d, i, columns) {
-  for (i = 1, t = 0; i < columns.length; ++i) t += d[columns[i]] = +d[columns[i]];
-  d.total = t;
-  return d;
-}, function(error, data) {
-  if (error) throw error;
+// create left yAxis
+var yAxisLeft = d3.svg.axis().scale(y0).ticks(6).orient("left");
+// create right yAxis
+var yAxisRight = d3.svg.axis().scale(y1).ticks(6).orient("right");
 
-  var keys = data.columns.slice(1);
+var svg = d3.select("body").append("svg")
+    .attr("width", width + margin.left + margin.right)
+    .attr("height", height + margin.top + margin.bottom)
+  .append("g")
+    .attr("class", "graph")
+    .attr("transform", "translate(" + margin.left + "," + margin.top + ")");
 
-  data.sort(function(a, b) { return a.total - b.total; });
-  x.domain(data.map(function(d) { return d.Curso; }));
-  y.domain([0, d3.max(data, function(d) { return d.total; })]).nice();
-  colores.domain(keys);
-
-  g.append("g")
-    .selectAll("g")
-    .data(d3.stack().keys(keys)(data))
-    .enter().append("g")
-      .attr("fill", function(d) { return colores(d.key); })
-    .selectAll("rect")
-    .data(function(d) { return d; })
-    .enter().append("rect")
-      .attr("x", function(d) { return x(d.data.Curso); })
-      .attr("y", function(d) { return y(d[1]); })
-      .attr("height", function(d) { return y(d[0]) - y(d[1]); })
-      .attr("width", x.bandwidth());
-
-  g.append("g")
-      .attr("class", "axis")
+d3.csv("data.csv", type, function(error, data) {
+  x.domain(data.map(function(d) { return d.curso; }));
+  y0.domain([0, d3.max(data, function(d) { return d.alumnosEmpiezan; })]);
+  y1.domain([0, d3.max(data, function(d) { return d.alumnosEmpiezan; })]);
+ 
+  svg.append("g")
+      .attr("class", "x axis")
       .attr("transform", "translate(0," + height + ")")
-      .call(d3.axisBottom(x));
+      .call(xAxis);
 
-  g.append("g")
-      .attr("class", "axis")
-      .call(d3.axisLeft(y).ticks(null, "s"))
-    .append("text")
-      .attr("x", 2)
-      .attr("y", y(y.ticks().pop()) + 0.5)
-      .attr("dy", "0.32em")
-      .attr("fill", "#000")
-      .attr("font-weight", "bold")
-      .attr("text-anchor", "start")
-      .text("Total alumnos por curso");
+  svg.append("g")
+    .attr("class", "y axis axisLeft")
+    .attr("transform", "translate(0,0)")
+    .call(yAxisLeft)
+  .append("text")
+    .attr("y", 6)
+    .attr("dy", "-2em")
+    .style("text-anchor", "end")
+    .style("text-anchor", "end")
+    .text("Empiezan");
+  
+  svg.append("g")
+    .attr("class", "y axis axisRight")
+    .attr("transform", "translate(" + (width) + ",0)")
+    .call(yAxisRight)
+  .append("text")
+    .attr("y", 6)
+    .attr("dy", "-2em")
+    .attr("dx", "2em")
+    .style("text-anchor", "end")
+    .text("Promocionan");
 
-  var legend = g.append("g")
-      .attr("font-family", "sans-serif")
-      .attr("font-sicolorese", 10)
-      .attr("text-anchor", "end")
-    .selectAll("g")
-    .data(keys.slice().reverse())
-    .enter().append("g")
-      .attr("transform", function(d, i) { return "translate(0," + i * 20 + ")"; });
+  bars = svg.selectAll(".bar").data(data).enter();
 
-  legend.append("rect")
-      .attr("x", width - 19)
-      .attr("width", 19)
-      .attr("height", 19)
-      .attr("fill", colores);
+  bars.append("rect")
+      .attr("class", "bar1")
+      .attr("x", function(d) { return x(d.curso); })
+      .attr("width", x.rangeBand()/2)
+      .attr("y", function(d) { return y0(d.alumnosEmpiezan); })
+    .attr("height", function(d,i,j) { return height - y0(d.alumnosEmpiezan); }); 
 
-  legend.append("text")
-      .attr("x", width - 24)
-      .attr("y", 9.5)
-      .attr("dy", "0.32em")
-      .text(function(d) { return d; });
+  bars.append("rect")
+      .attr("class", "bar2")
+      .attr("x", function(d) { return x(d.curso) + x.rangeBand()/2; })
+      .attr("width", x.rangeBand() / 2)
+      .attr("y", function(d) { return y1(d.alumnosPromocionan); })
+    .attr("height", function(d,i,j) { return height - y1(d.alumnosPromocionan); }); 
+
 });
+
+function type(d) {
+  d.alumnosEmpiezan = +d.alumnosEmpiezan;
+  return d;
+}
