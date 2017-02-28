@@ -64,21 +64,43 @@ d3.csv("data.csv", type, function(error, data) {
       .attr("width", x.rangeBand()/2)
       .attr("y", function(d) { return y0(d.alumnosEmpiezan); })
     .attr("height", function(d,i,j) { return height - y0(d.alumnosEmpiezan); })
-          .on("mouseover", function(d) {
-       d3.select("this")
-      .attr("fill", "red")
-      })
+      .on("mouseover", function(d) {
+        //mostrar tooltip  
+        d3.select("#tooltip").classed("hidden", false)
+          .style("left", (d3.event.pageX + 5) + "px")
+          .style("top", (d3.event.pageY - 25) + "px")
+        d3.select("#value")
+          .text(Math.round((d.alumnosPromocionan*100)/d.alumnosEmpiezan))
+          .style("color", "green")
+        })
+      .on("mouseout", function(d) {
+        d3.select(this)
+          .transition()
+          .duration(1500)
+        d3.select("#tooltip").classed("hidden", true)
+    })
+
   bars.append("rect")
       .attr("class", "bar2")
       .attr("x", function(d) { return x(d.curso) + x.rangeBand()/2; })
       .attr("width", x.rangeBand() / 2)
       .attr("y", function(d) { return y1(d.alumnosPromocionan); })
     .attr("height", function(d,i,j) { return height - y1(d.alumnosPromocionan); })
-
       .on("mouseover", function(d) {
-       d3.select("this")
-      .attr("fill", "red")
-      })
+    //mostrar tooltip  
+        d3.select("#tooltip").classed("hidden", false)
+          .style("left", (d3.event.pageX + 5) + "px")
+          .style("top", (d3.event.pageY - 25) + "px")
+        d3.select("#value")
+          .text(Math.round((d.alumnosPromocionan*100)/d.alumnosEmpiezan))
+          .style("color", "green")
+    })
+      .on("mouseout", function(d) {
+        d3.select(this)
+          .transition()
+          .duration(1500)
+        d3.select("#tooltip").classed("hidden", true)
+    })
 
   text = svg.selectAll(".graph").data(data).enter();
   text.append("text")
@@ -94,8 +116,6 @@ d3.csv("data.csv", type, function(error, data) {
       .attr("y", function(d) { return y0(d.alumnosPromocionan-1.5); } )
 
 });
-
-
 
 function type(d) {
   d.alumnosEmpiezan = +d.alumnosEmpiezan;

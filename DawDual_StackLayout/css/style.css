@@ -3,11 +3,11 @@ body {
 }
 
 .y.axisRight text {
-    fill: #57BC90;
+  fill: #00A779;
 }
 
 .y.axisLeft text {
-    fill: #015249;
+  fill: #FF5C00;
 }
 
 .axis path,
@@ -17,12 +17,23 @@ body {
   shape-rendering: crispEdges;
 }
 
+
 .bar1 {
-  fill: #015249;
+  fill: #FF5C00;
 }
 
 .bar2 {
-  fill: #57BC90;
+  fill: #00A779;
+}
+
+.bar2:hover {
+  fill: #35D3A7;
+  transition-duration: 0.4s;
+}
+
+.bar1:hover {
+  fill: #FF8540;
+  transition-duration: 0.4s;
 }
 
 .x.axis path {
@@ -30,38 +41,45 @@ body {
 }
 
 #tooltip {
-        position: absolute;
-        width: 80px;
-        height: auto;
-        padding: 10px;
-        background-color: white;
-        -webkit-border-radius: 10px;
-        -moz-border-radius: 10px;
-        border-radius: 10px;
-        -webkit-box-shadow: 4px 4px 10px rgba(0, 0, 0, 0.4);
-        -moz-box-shadow: 4px 4px 10px rgba(0, 0, 0, 0.4);
-        box-shadow: 4px 4px 10px rgba(0, 0, 0, 0.4);
-        pointer-events: none;
+  position: absolute;
+  width: 100px;
+  height: auto;
+  padding: 10px;
+  background-color: white;
+  -webkit-border-radius: 10px;
+  -moz-border-radius: 10px;
+  border-radius: 10px;
+  -webkit-box-shadow: 4px 4px 10px rgba(0, 0, 0, 0.4);
+  -moz-box-shadow: 4px 4px 10px rgba(0, 0, 0, 0.4);
+  box-shadow: 4px 4px 10px rgba(0, 0, 0, 0.4);
+  pointer-events: none;
 }
 
 #tooltip.hidden {
-        display: none;
+  display: none;
 }
 
 #tooltip p {
-        margin: 0;
-        font-family: sans-serif;
-        font-size: 16px;
-        line-height: 20px;
+  margin: 0;
+  font-family: sans-serif;
+  font-size: 16px;
+  line-height: 20px;
 }
 
-#ordenCrecienteValores {
-          border-color: #90EE90;
-          background-color: #90EE90;
-          width: 150px;
-          padding: 5px;
-          border-style: outset;
-          text-align: center;
+#ordenarCursos {
+  background-color: white;
+  color: black;
+  border: 2px solid #555555;
+  transition-duration: 0.4s;
+  padding: 16px 32px;
+  text-align: center;
+  font-size: 16px;
+  margin: 4px 2px;
+  cursor: pointer;
+}
+#ordenarCursos:hover {
+  background-color: #555555;
+  color: white;
 }
 
 .textBar1 {
