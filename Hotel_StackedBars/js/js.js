@@ -143,10 +143,9 @@ function dashboard(id, fData){
 
         // create table for legend.
         var legend = d3.select(id).append("table").attr('class','legend');
-        
+            legend.append("caption").attr('class', 'legendHeader').text("Numero de reservas por horas");
         // create one row per segment.
-        var tr = legend.append("tbody").selectAll("tr").data(lD).enter().append("tr");
-
+        var tr = legend.append("tbody").attr('class', 'legendBox').selectAll("tr").data(lD).enter().append("tr");
         // create the first column for each segment.
         tr.append("td").append("svg").attr("width", '16').attr("height", '16').append("rect")
         .attr("width", '16').attr("height", '16')
@@ -166,7 +165,7 @@ function dashboard(id, fData){
         // Utility function to be used to update the legend.
         leg.update = function(nD){
             // update the data attached to the row elements.
-            var l = legend.select("tbody").selectAll("tr").data(nD);
+            var l = legend.select('.legendBox').selectAll("tr").data(nD);
 
             // update the frequencies.
             l.select(".legendFreq").text(function(d){ return d3.format(",")(d.freq);});
